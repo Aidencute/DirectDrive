@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --bg-body: #0F0F0F;
@@ -41,26 +42,65 @@
 
         /* --- Animations --- */
         @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes toastSlideIn {
-            from { opacity: 0; transform: translate(-50%, 20px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
 
         @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
+            }
         }
 
         @keyframes logoFloat {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         /* --- Main Container --- */
@@ -71,10 +111,11 @@
             padding: 40px 50px;
             width: 100%;
             max-width: 900px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             opacity: 0;
-            position: relative; /* Ensure it sits above other elements if needed */
+            position: relative;
+            /* Ensure it sits above other elements if needed */
             z-index: 2;
         }
 
@@ -143,7 +184,7 @@
             font-size: 18px;
             outline: none;
             transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         input::placeholder {
@@ -153,12 +194,12 @@
         input:focus {
             border-color: #444;
             background-color: #1e1e1e;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05), inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05), inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         input.error {
             border-color: #ff4a4a;
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
         }
 
         /* --- Output Specifics --- */
@@ -166,17 +207,19 @@
             cursor: default;
             background-color: #101010;
             /* Add padding on right so text doesn't hide behind button */
-            padding-right: 70px; 
+            padding-right: 70px;
         }
 
         /* Internal Copy Button */
         .copy-btn {
             position: absolute;
-            right: 12px; /* Aligned evenly to the right */
+            right: 12px;
+            /* Aligned evenly to the right */
             top: 50%;
-            transform: translateY(-50%); /* Vertically centered (Y-axis alignment) */
-            
-            background: #252525;
+            transform: translateY(-50%);
+            /* Vertically centered (Y-axis alignment) */
+
+            background: #181818;
             border: 1px solid var(--stroke-input);
             border-radius: 12px;
             padding: 10px;
@@ -190,8 +233,8 @@
         }
 
         .copy-btn:hover {
-            background: #333;
-            border-color: #444;
+            background: #1f1f1f;
+            border-color: #2d2d2dcc;
         }
 
         .copy-btn:active {
@@ -213,24 +256,29 @@
         .copy-btn.copied svg {
             transform: rotate(360deg);
         }
+        
 
         /* --- Logo Watermark --- */
         .logo-watermark {
             position: fixed;
             bottom: 25px;
             right: 30px;
-            font-family: Papyrus, fantasy; /* Funny font */
+            font-family: "Papyrus", fantasy;      /* Funny font */
             font-size: 50px;
-            color: #333; /* Subtle dark grey */
+            color: #333;
+            /* Subtle dark grey */
             letter-spacing: 0.5px;
             user-select: none;
-            z-index: 1; /* Behind the card */
+            z-index: 1;
+            /* Behind the card */
             transition: all 0.3s ease;
             animation: logoFloat 4s ease-in-out infinite;
         }
 
         .logo-watermark:hover {
-            color: #555; /* Lighter on hover */
+            cursor: pointer;
+            color: #555;
+            /* Lighter on hover */
             transform: rotate(-2deg) scale(1.05);
         }
 
@@ -250,7 +298,7 @@
             border-radius: 50px;
             font-size: 14px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             opacity: 0;
             pointer-events: none;
             animation: toastSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -290,13 +338,17 @@
 
         /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
+
+            *,
+            *::before,
+            *::after {
                 animation-duration: 0.01ms !important;
                 transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
+
 <body>
 
     <div class="card">
@@ -321,7 +373,10 @@
                     <input type="text" id="directOutput" class="output-field" placeholder="Output..." readonly>
                     <!-- Button is inside the wrapper, aligned via absolute positioning -->
                     <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" title="Copy to clipboard">
-                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -329,7 +384,7 @@
     </div>
 
     <!-- Fixed Logo Watermark -->
-    <div class="logo-watermark">Mr Funnybonbon Designs</div>
+    <div class="logo-watermark">🐰🤣🐇 Mr Funnybonbon Designs</div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -364,14 +419,14 @@
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerText = message;
-            
+
             toastContainer.innerHTML = '';
             toastContainer.appendChild(toast);
 
             setTimeout(() => {
                 toast.classList.add('fade-out');
                 setTimeout(() => {
-                    if(toast.parentNode) toast.parentNode.removeChild(toast);
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
                 }, 300);
             }, 2000);
         }
@@ -391,4 +446,5 @@
         }
     </script>
 </body>
+
 </html>

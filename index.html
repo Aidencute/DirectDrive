@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DirectDrive</title>
+    <!-- Fun Google Font for the Logo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-body: #0F0F0F;
@@ -14,10 +19,9 @@
             --text-main: #FFFFFF;
             --text-muted: #565656;
             --text-placeholder: #3D3D3D;
-            --accent: #4a9eff; /* Added accent color for focus */
+            --accent: #FFFFFF;
         }
 
-        /* Smooth scroll and box-sizing */
         * {
             box-sizing: border-box;
         }
@@ -29,66 +33,72 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Changed height to min-height for better mobile scrolling */
+            min-height: 100vh;
             margin: 0;
-            padding: 20px; /* Padding around the viewport */
+            padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* Animation Keyframes */
+        /* --- Animations --- */
         @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-        /* The Main Container */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        @keyframes logoFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Main Container --- */
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--stroke-card);
             border-radius: 55px;
-            padding: 40px 40px;
+            padding: 40px 50px;
             width: 100%;
             max-width: 900px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            
-            /* Animation Properties */
             animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            opacity: 0; /* Start hidden for animation */
+            opacity: 0;
+            position: relative; /* Ensure it sits above other elements if needed */
+            z-index: 2;
         }
 
+        /* --- Header --- */
         .header {
             margin-bottom: 30px;
             animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
             opacity: 0;
         }
 
-        h1 {
-            font-size: clamp(32px, 5vw, 42px); /* Fluid typography */
+        .title-group h1 {
+            font-size: clamp(32px, 5vw, 42px);
             margin: 0;
             font-weight: 500;
             letter-spacing: -1px;
-            transition: color 0.3s;
         }
 
         .description {
             color: var(--text-muted);
             font-size: 18px;
             margin-top: 8px;
-            transition: color 0.3s;
         }
 
-        /* Layout for inputs */
+        /* --- Layout --- */
         .input-row {
             display: flex;
             gap: 20px;
@@ -102,7 +112,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            min-width: 0; /* Prevents flex overflow issues */
+            min-width: 0;
         }
 
         label {
@@ -115,11 +125,12 @@
             transition: color 0.3s;
         }
 
-        /* Textbox Styling */
+        /* --- Inputs & Buttons --- */
         .field-wrapper {
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         input {
@@ -137,120 +148,128 @@
 
         input::placeholder {
             color: var(--text-placeholder);
-            transition: color 0.3s;
         }
 
         input:focus {
-            border-color: var(--accent);
+            border-color: #444;
             background-color: #1e1e1e;
-            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15), inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05), inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Highlight label when focused */
-        input:focus + label, 
-        .field-wrapper:focus-within + label { /* Note: label must be after or wrapper used */
-            color: var(--accent);
-        }
-
-        /* Error State */
         input.error {
             border-color: #ff4a4a;
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        /* Output specific styling */
+        /* --- Output Specifics --- */
         .output-field {
-            cursor: pointer;
-            padding-right: 60px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background-color: #101010; /* Slightly darker for output */
+            cursor: default;
+            background-color: #101010;
+            /* Add padding on right so text doesn't hide behind button */
+            padding-right: 70px; 
         }
 
-        .output-field:focus {
-            cursor: text; /* Allow text selection if wanted */
-        }
-
-        .copy-icon {
+        /* Internal Copy Button */
+        .copy-btn {
             position: absolute;
-            right: 15px;
+            right: 12px; /* Aligned evenly to the right */
+            top: 50%;
+            transform: translateY(-50%); /* Vertically centered (Y-axis alignment) */
+            
             background: #252525;
-            border-radius: 10px;
+            border: 1px solid var(--stroke-input);
+            border-radius: 12px;
             padding: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            border: 1px solid transparent;
+            color: var(--text-muted);
+            z-index: 10;
         }
 
-        .copy-icon:hover {
+        .copy-btn:hover {
             background: #333;
-            transform: scale(1.05);
+            border-color: #444;
         }
 
-        .copy-icon:active {
-            transform: scale(0.95);
+        .copy-btn:active {
+            transform: translateY(-50%) scale(0.95);
         }
 
-        .copy-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: #aaa;
-            transition: fill 0.2s, transform 0.3s;
+        .copy-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* Success state for feedback */
-        .success-msg {
-            position: absolute;
-            bottom: -22px;
-            right: 0;
-            font-size: 12px;
-            color: #4caf50;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            pointer-events: none;
+        .copy-btn.copied {
+            background: var(--text-main);
+            color: #000;
         }
 
-        .success-msg.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Icon success animation */
-        .copy-icon.copied svg {
-            fill: #4caf50;
+        .copy-btn.copied svg {
             transform: rotate(360deg);
         }
 
-        /* --- Responsive Design --- */
+        /* --- Logo Watermark --- */
+        .logo-watermark {
+            position: fixed;
+            bottom: 25px;
+            right: 30px;
+            font-family: 'Fredoka', sans-serif; /* Funny font */
+            font-size: 18px;
+            color: #333; /* Subtle dark grey */
+            letter-spacing: 0.5px;
+            user-select: none;
+            z-index: 1; /* Behind the card */
+            transition: all 0.3s ease;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        .logo-watermark:hover {
+            color: #555; /* Lighter on hover */
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        /* --- Toast Notification --- */
+        .toast-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: var(--text-main);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+            animation: toastSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .toast.fade-out {
+            animation: toastSlideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) reverse forwards;
+        }
+
+        /* --- Responsive --- */
         @media (max-width: 768px) {
             .card {
                 padding: 30px;
-                border-radius: 30px; /* Reduce border radius on mobile */
+                border-radius: 30px;
             }
 
             .input-row {
-                flex-direction: column; /* Stack inputs vertically */
+                flex-direction: column;
                 gap: 30px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .description {
-                font-size: 16px;
             }
 
             input {
@@ -258,25 +277,21 @@
                 font-size: 16px;
             }
 
-            .copy-icon {
-                padding: 8px;
+            .output-field {
+                padding-right: 60px;
+            }
+
+            .logo-watermark {
+                bottom: 15px;
+                right: 15px;
+                font-size: 14px;
             }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-            .card {
-                padding: 25px 20px;
-            }
-        }
-
-        /* Accessibility: Reduced Motion */
+        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
         }
@@ -286,8 +301,10 @@
 
     <div class="card">
         <div class="header">
-            <h1>DirectDrive</h1>
-            <div class="description">Create direct download links</div>
+            <div class="title-group">
+                <h1>DirectDrive</h1>
+                <div class="description">Create direct download links</div>
+            </div>
         </div>
 
         <div class="input-row">
@@ -301,29 +318,34 @@
             <div class="input-group">
                 <label>Direct Download Link</label>
                 <div class="field-wrapper">
-                    <input type="text" id="directOutput" class="output-field" placeholder="Output..." readonly onclick="copyToClipboard()">
-                    <div class="copy-icon" id="copyBtn" onclick="copyToClipboard()">
+                    <input type="text" id="directOutput" class="output-field" placeholder="Output..." readonly>
+                    <!-- Button is inside the wrapper, aligned via absolute positioning -->
+                    <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" title="Copy to clipboard">
                         <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                    </div>
-                    <span id="copyFeedback" class="success-msg">Copied!</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Fixed Logo Watermark -->
+    <div class="logo-watermark">Mr Funnybonbon Designs</div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
         const driveInput = document.getElementById('driveInput');
         const directOutput = document.getElementById('directOutput');
-        const feedback = document.getElementById('copyFeedback');
         const copyBtn = document.getElementById('copyBtn');
+        const toastContainer = document.getElementById('toastContainer');
 
-        // Automatic conversion as you type/paste
+        // Automatic conversion
         driveInput.addEventListener('input', () => {
             const link = driveInput.value.trim();
             const regex = /\/d\/([a-zA-Z0-9_-]+)/;
             const match = link.match(regex);
 
-            // Reset error state
             driveInput.classList.remove('error');
 
             if (match && match[1]) {
@@ -333,24 +355,36 @@
                 directOutput.value = "";
             } else {
                 directOutput.value = "Invalid Link";
-                // Add shake animation
                 driveInput.classList.add('error');
             }
         });
+
+        // Toast function
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            
+            toastContainer.innerHTML = '';
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => {
+                    if(toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            }, 2000);
+        }
 
         // Copy function
         function copyToClipboard() {
             if (!directOutput.value || directOutput.value === "Invalid Link") return;
 
             navigator.clipboard.writeText(directOutput.value).then(() => {
-                // Show text feedback
-                feedback.classList.add('show');
-                
-                // Animate Icon
                 copyBtn.classList.add('copied');
+                showToast("Link Copied!");
 
                 setTimeout(() => {
-                    feedback.classList.remove('show');
                     copyBtn.classList.remove('copied');
                 }, 2000);
             });

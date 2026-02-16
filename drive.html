@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DirectDrive</title>
+    <style>
+        :root {
+            --bg-body: #0F0F0F;
+            --bg-card: #141414;
+            --stroke-card: #292929;
+            --bg-input: #191919;
+            --stroke-input: #252525;
+            --text-main: #FFFFFF;
+            --text-muted: #565656;
+            --text-placeholder: #3D3D3D;
+            --accent: #4a9eff; /* Added accent color for focus */
+        }
+
+        /* Smooth scroll and box-sizing */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Changed height to min-height for better mobile scrolling */
+            margin: 0;
+            padding: 20px; /* Padding around the viewport */
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* The Main Container */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--stroke-card);
+            border-radius: 55px;
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            
+            /* Animation Properties */
+            animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0; /* Start hidden for animation */
+        }
+
+        .header {
+            margin-bottom: 30px;
+            animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+            opacity: 0;
+        }
+
+        h1 {
+            font-size: clamp(32px, 5vw, 42px); /* Fluid typography */
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: -1px;
+            transition: color 0.3s;
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-top: 8px;
+            transition: color 0.3s;
+        }
+
+        /* Layout for inputs */
+        .input-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+            opacity: 0;
+        }
+
+        .input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 0; /* Prevents flex overflow issues */
+        }
+
+        label {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 4px;
+            transition: color 0.3s;
+        }
+
+        /* Textbox Styling */
+        .field-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--stroke-input);
+            border-radius: 20px;
+            padding: 20px;
+            color: var(--text-main);
+            font-size: 18px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input::placeholder {
+            color: var(--text-placeholder);
+            transition: color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background-color: #1e1e1e;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15), inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Highlight label when focused */
+        input:focus + label, 
+        .field-wrapper:focus-within + label { /* Note: label must be after or wrapper used */
+            color: var(--accent);
+        }
+
+        /* Error State */
+        input.error {
+            border-color: #ff4a4a;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Output specific styling */
+        .output-field {
+            cursor: pointer;
+            padding-right: 60px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #101010; /* Slightly darker for output */
+        }
+
+        .output-field:focus {
+            cursor: text; /* Allow text selection if wanted */
+        }
+
+        .copy-icon {
+            position: absolute;
+            right: 15px;
+            background: #252525;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .copy-icon:hover {
+            background: #333;
+            transform: scale(1.05);
+        }
+
+        .copy-icon:active {
+            transform: scale(0.95);
+        }
+
+        .copy-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #aaa;
+            transition: fill 0.2s, transform 0.3s;
+        }
+
+        /* Success state for feedback */
+        .success-msg {
+            position: absolute;
+            bottom: -22px;
+            right: 0;
+            font-size: 12px;
+            color: #4caf50;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+
+        .success-msg.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Icon success animation */
+        .copy-icon.copied svg {
+            fill: #4caf50;
+            transform: rotate(360deg);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px;
+                border-radius: 30px; /* Reduce border radius on mobile */
+            }
+
+            .input-row {
+                flex-direction: column; /* Stack inputs vertically */
+                gap: 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .description {
+                font-size: 16px;
+            }
+
+            input {
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .copy-icon {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            .card {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Accessibility: Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="header">
+            <h1>DirectDrive</h1>
+            <div class="description">Create direct download links</div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label>Google Drive Link</label>
+                <div class="field-wrapper">
+                    <input type="text" id="driveInput" placeholder="Paste link here..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Direct Download Link</label>
+                <div class="field-wrapper">
+                    <input type="text" id="directOutput" class="output-field" placeholder="Output..." readonly onclick="copyToClipboard()">
+                    <div class="copy-icon" id="copyBtn" onclick="copyToClipboard()">
+                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                    </div>
+                    <span id="copyFeedback" class="success-msg">Copied!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const driveInput = document.getElementById('driveInput');
+        const directOutput = document.getElementById('directOutput');
+        const feedback = document.getElementById('copyFeedback');
+        const copyBtn = document.getElementById('copyBtn');
+
+        // Automatic conversion as you type/paste
+        driveInput.addEventListener('input', () => {
+            const link = driveInput.value.trim();
+            const regex = /\/d\/([a-zA-Z0-9_-]+)/;
+            const match = link.match(regex);
+
+            // Reset error state
+            driveInput.classList.remove('error');
+
+            if (match && match[1]) {
+                const fileId = match[1];
+                directOutput.value = `https://drive.google.com/uc?export=download&id=${fileId}`;
+            } else if (link === "") {
+                directOutput.value = "";
+            } else {
+                directOutput.value = "Invalid Link";
+                // Add shake animation
+                driveInput.classList.add('error');
+            }
+        });
+
+        // Copy function
+        function copyToClipboard() {
+            if (!directOutput.value || directOutput.value === "Invalid Link") return;
+
+            navigator.clipboard.writeText(directOutput.value).then(() => {
+                // Show text feedback
+                feedback.classList.add('show');
+                
+                // Animate Icon
+                copyBtn.classList.add('copied');
+
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
